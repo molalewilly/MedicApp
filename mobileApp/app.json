@@ -9,14 +9,18 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.laronawillymolale.mobileApp"
+      "package": "com.laronawillymolale.mobileApp",
+      "runtimeVersion": "1.0.0"
     },
     "web": {
       "bundler": "metro",
@@ -45,6 +49,9 @@
       "eas": {
         "projectId": "3cfef8d0-a257-4d0d-85f2-4e290edb70d9"
       }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/3cfef8d0-a257-4d0d-85f2-4e290edb70d9"
     }
   }
 }
