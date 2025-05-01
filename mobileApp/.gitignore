@@ -1,5 +1,5 @@
 # Ignore all node_modules folders in all levels
-**/node_modules
+/node_modules
 
 # OS-specific
 .DS_Store
