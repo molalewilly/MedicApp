@@ -22,7 +22,7 @@ export default function Login() {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push('/home');
+      router.replace('/home');
     } catch (error: any) {
       switch (error.code) {
         case 'auth/invalid-email':
@@ -94,7 +94,7 @@ export default function Login() {
 
       <Text style={styles.or}>────────  Or  ────────</Text>
 
-      <TouchableOpacity onPress={() => router.push('/home')}>
+      <TouchableOpacity onPress={() => router.replace('/home')}>
         <Text style={styles.guestText}>Continue as Guest</Text>
       </TouchableOpacity>
 

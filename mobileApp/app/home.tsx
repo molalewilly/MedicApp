@@ -3,10 +3,28 @@ import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, Image } fro
 import MapView, { Marker, Region } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { useRouter } from 'expo-router';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { styles } from '../styles/style';
 import { getAuth } from 'firebase/auth'; // Import Firebase Auth
+
+interface Doctor {
+  id: string;
+  name: string;
+  email: string;
+  specialty: string;
+  phone: string;
+  gender: string;
+  location: {
+    address: string;
+    latitude: number;
+    longitude: number;
+  };
+  experience: string;
+  bio: string;
+  photo?: string;
+  suspended: boolean;  // This will be a boolean
+}
 
 const specialties = [
   'All',
@@ -27,26 +45,37 @@ const Home: React.FC = () => {
     longitudeDelta: 0.01,
   });
   const [userLocation, setUserLocation] = useState<Region | null>(null);
-  const [doctors, setDoctors] = useState<any[]>([]);
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
   const mapViewRef = useRef<MapView | null>(null);
 
   useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, 'doctors'));
-        const docs = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setDoctors(docs);
-      } catch (error) {
-        Alert.alert('Error', 'Failed to fetch doctors');
-      }
-    };
+    const unsubscribe = onSnapshot(collection(db, 'doctors'), (querySnapshot) => {
+      const docs = querySnapshot.docs
+        .map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            name: data.name,
+            email: data.email,
+            specialty: data.specialty,
+            phone: data.phone,
+            gender: data.gender,
+            location: data.location,
+            experience: data.experience,
+            bio: data.bio,
+            photo: data.photo,
+            suspended: data.suspended ?? false, // Use a default value for suspended if missing
+          } as Doctor;
+        })
+        .filter((doctor) => !doctor.suspended); // Only show doctors that are NOT suspended
 
-    fetchDoctors();
+      setDoctors(docs); // Update the state with filtered doctors
+    });
+
+    // Cleanup: Unsubscribe when the component unmounts
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -93,7 +122,7 @@ const Home: React.FC = () => {
           },
           {
             text: 'Go to Login',
-            onPress: () => router.push('/login'), // Navigate to the login page
+            onPress: () => router.replace('/login'), // Navigate to the login page
           },
         ],
         { cancelable: true }
@@ -102,12 +131,18 @@ const Home: React.FC = () => {
   };
 
   const filteredDoctors = doctors.filter((doctor) => {
-    const matchesSpecialty =
-      activeSpecialty === 'All' || doctor.specialty.toLowerCase() === activeSpecialty.toLowerCase();
-    const matchesSearchQuery =
-      doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      doctor.location?.address?.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesSpecialty && matchesSearchQuery;
+    const name = doctor.name?.toLowerCase() || '';
+    const specialty = doctor.specialty?.toLowerCase() || '';
+    const address = doctor.location?.address?.toLowerCase() || '';
+    const query = searchQuery.toLowerCase();
+  
+    const matchesSpecialtyChip =
+      activeSpecialty === 'All' || specialty === activeSpecialty.toLowerCase();
+  
+    const matchesSearch =
+      name.includes(query) || specialty.includes(query) || address.includes(query);
+  
+    return matchesSpecialtyChip && matchesSearch;
   });
 
   const getInitials = (name: string) => {
@@ -185,6 +220,9 @@ const Home: React.FC = () => {
         style={styles.map}
         region={region}
         onRegionChangeComplete={(newRegion) => setRegion(newRegion)}
+        showsUserLocation={true}      
+        showsMyLocationButton={true}   
+        showsCompass={true}            
       >
         {userLocation && (
           <Marker coordinate={userLocation} title="You are here" pinColor="blue" />
@@ -209,14 +247,14 @@ const Home: React.FC = () => {
             key={doctor.id}
             style={styles.card}
             onPress={() =>
-              router.replace({
+              router.push({
                 pathname: '/DoctorDetails',
                 params: { doctor: encodeURIComponent(JSON.stringify(doctor)) },
               })
             }
           >
             <View style={styles.avatarPlaceholder}>
-              {isValidImageUrl(doctor.photo) ? (
+            {doctor.photo && isValidImageUrl(doctor.photo) ?  (
                 <Image source={{ uri: doctor.photo }} style={styles.avatarImage} />
               ) : (
                 <View style={styles.initialsCircle}>
