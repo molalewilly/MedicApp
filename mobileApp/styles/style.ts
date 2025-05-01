@@ -226,6 +226,13 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
+  detailLine: {
+    fontSize: 15,
+    color: '#333',
+    marginBottom: 6,
+  },
   
+   
   
+
 });

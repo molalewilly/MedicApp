@@ -2,17 +2,16 @@ import React, { useState } from "react";
 import { db } from "../../../firebase";
 import { addDoc, collection } from "firebase/firestore";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
-import "leaflet/dist/leaflet.css"; // import leaflet CSS
+import "leaflet/dist/leaflet.css";
 import "./registerDoctor.css";
 
-// LocationPicker component
 const LocationPicker = ({ onLocationSelect }) => {
   const [position, setPosition] = useState(null);
 
   useMapEvents({
     click(e) {
       setPosition(e.latlng);
-      onLocationSelect(e.latlng); // Pass clicked location to parent
+      onLocationSelect(e.latlng);
     },
   });
 
@@ -36,6 +35,8 @@ const RegisterDoctor = () => {
     suspended: false,
   });
 
+  const [selectedFile, setSelectedFile] = useState(null);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setDoctor({
@@ -55,7 +56,9 @@ const RegisterDoctor = () => {
     }));
 
     try {
-      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latlng.lat}&lon=${latlng.lng}&format=json`);
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${latlng.lat}&lon=${latlng.lng}&format=json`
+      );
       const data = await response.json();
       const city = data.address.city || data.address.town || data.address.village || "";
 
@@ -75,16 +78,44 @@ const RegisterDoctor = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let photoUrl = "";
+
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+      formData.append("upload_preset", "doctors"); // your upload preset
+
+      try {
+        const response = await fetch(
+          "https://api.cloudinary.com/v1_1/dwnndpmml/image/upload",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        const data = await response.json();
+        photoUrl = data.secure_url;
+      } catch (err) {
+        console.error("Cloudinary upload failed:", err);
+        alert("Image upload failed.");
+        return;
+      }
+    }
+
     try {
       await addDoc(collection(db, "doctors"), {
         ...doctor,
+        photo: photoUrl, // Include image URL
         location: {
           address: doctor.location.address,
           latitude: parseFloat(doctor.location.latitude),
           longitude: parseFloat(doctor.location.longitude),
         },
       });
+
       alert("Doctor registered successfully!");
+
       setDoctor({
         name: "",
         email: "",
@@ -100,6 +131,8 @@ const RegisterDoctor = () => {
         bio: "",
         suspended: false,
       });
+
+      setSelectedFile(null);
     } catch (error) {
       console.error("Error registering doctor:", error);
     }
@@ -151,13 +184,9 @@ const RegisterDoctor = () => {
             required
           />
 
-          {/* MAP Section */}
+          {/* Map Section */}
           <div style={{ height: "400px", marginBottom: "20px" }}>
-            <MapContainer
-              center={[-24.6544, 25.9086]} // Default center (can be Gaborone or wherever you prefer)
-              zoom={13}
-              style={{ height: "100%", width: "100%" }}
-            >
+            <MapContainer center={[-24.6544, 25.9086]} zoom={13} style={{ height: "100%", width: "100%" }}>
               <TileLayer
                 attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -166,7 +195,6 @@ const RegisterDoctor = () => {
             </MapContainer>
           </div>
 
-          {/* Show picked location */}
           <input
             type="text"
             name="address"
@@ -204,6 +232,15 @@ const RegisterDoctor = () => {
             placeholder="Bio"
             required
           />
+
+          {/* Photo Upload */}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setSelectedFile(e.target.files[0])}
+            required
+          />
+
           <button type="submit" className="register-btn">
             Register Doctor
           </button>

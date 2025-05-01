@@ -106,7 +106,7 @@ const Home: React.FC = () => {
       activeSpecialty === 'All' || doctor.specialty.toLowerCase() === activeSpecialty.toLowerCase();
     const matchesSearchQuery =
       doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      doctor.location?.city?.toLowerCase().includes(searchQuery.toLowerCase());
+      doctor.location?.address?.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesSpecialty && matchesSearchQuery;
   });
 
@@ -209,15 +209,15 @@ const Home: React.FC = () => {
             key={doctor.id}
             style={styles.card}
             onPress={() =>
-              router.push({
+              router.replace({
                 pathname: '/DoctorDetails',
                 params: { doctor: encodeURIComponent(JSON.stringify(doctor)) },
               })
             }
           >
             <View style={styles.avatarPlaceholder}>
-              {isValidImageUrl(doctor.profileImage) ? (
-                <Image source={{ uri: doctor.profileImage }} style={styles.avatarImage} />
+              {isValidImageUrl(doctor.photo) ? (
+                <Image source={{ uri: doctor.photo }} style={styles.avatarImage} />
               ) : (
                 <View style={styles.initialsCircle}>
                   <Text style={styles.initialsText}>{getInitials(doctor.name)}</Text>
