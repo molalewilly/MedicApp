@@ -210,6 +210,28 @@ export const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 6,
   },
+  profileImageSmall: {
+  width: 40,
+  height: 40,
+  borderRadius: 20,
+  backgroundColor: '#ccc',
+},
+
+initialsCircleSmall: {
+  width: 40,
+  height: 40,
+  borderRadius: 20,
+  backgroundColor: '#1877F2',
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+
+initialsTextSmall: {
+  color: '#fff',
+  fontSize: 16,
+  fontWeight: 'bold',
+},
+
   
    
   

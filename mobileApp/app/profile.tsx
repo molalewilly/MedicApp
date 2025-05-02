@@ -32,7 +32,7 @@ export default function Profile() {
               name: userDataFromFirestore.username || user.displayName || 'username',
               email: user.email || 'email@example.com',
               phone: userDataFromFirestore.phone || user.phoneNumber || '+267 7XXXXXXX',
-              profilePicture: userDataFromFirestore.photoUrl || '', // Only set profilePicture if available
+              profilePicture: userDataFromFirestore.photoUrl || '', 
             });
           } else {
             Alert.alert('Error', 'User data not found in Firestore.');
@@ -53,7 +53,7 @@ export default function Profile() {
     const auth = getAuth();
     auth.signOut()
       .then(() => {
-        router.push('/login');
+        router.replace('/login');
       })
       .catch((error) => {
         console.error(error);
