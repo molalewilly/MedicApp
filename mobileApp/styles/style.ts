@@ -6,6 +6,8 @@ export const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#f2f2f2',
+    justifyContent: 'center', 
+  
   },
   name: {
     fontSize: 16,
@@ -14,9 +16,9 @@ export const styles = StyleSheet.create({
     color: '#333',
   },
   heading: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 30,
+    marginBottom: 10,
     textAlign: 'center',
   },
   input: {
@@ -40,25 +42,9 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 15,
   },
-  loginText: { color: 'black', fontWeight: 'bold' },
+  loginText: { textAlign: 'center',color: 'black', fontWeight: 'bold' },
   or: { textAlign: 'center', color: '#aaa', marginVertical: 15 },
-  fbButton: {
-    backgroundColor: '#1877F2',
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  fbText: { color: '#fff', fontWeight: 'bold' },
-  googleButton: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  googleText: { color: '#555', fontWeight: 'bold' },
+ 
   guestText: {
     textAlign: 'center',
     fontSize: 16,
@@ -66,7 +52,7 @@ export const styles = StyleSheet.create({
     marginBottom: 20,
     fontWeight: '600',
   },
-  signupText: { textAlign: 'center', color: '#555' },
+  signupText: { textAlign: 'center', color: 'black',fontWeight: 'bold' },
   signupLink: { color: '#1877F2', fontWeight: '600' },
   loginLink: { color: '#1877F2', fontWeight: '600' },
   signupButton: {
@@ -120,13 +106,15 @@ export const styles = StyleSheet.create({
     paddingLeft: 20,
     flex: 1,
     marginRight: 10,
+    borderWidth: 2,  
+  borderColor: 'black',
   },
   profileIcon: {
     width: 40,
     height: 40,
     borderRadius: 20,
     overflow: 'hidden',
-    backgroundColor: '#ddd',
+    backgroundColor: 'black',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -136,16 +124,7 @@ export const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: '#bbb',
   },
-  locationButton: {
-    backgroundColor: '#ccc',
-    padding: 12,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  locationText: {
-    fontWeight: 'bold',
-  },
+ 
   specialtyContainer: {
     marginBottom: 6,
   },
@@ -164,7 +143,7 @@ export const styles = StyleSheet.create({
     color: '#000',
   },
   map: {
-    height: 200,
+    height: 210,
     borderRadius: 10,
     marginBottom: 12,
   },

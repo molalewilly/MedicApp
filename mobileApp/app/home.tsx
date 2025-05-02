@@ -6,7 +6,7 @@ import { useRouter } from 'expo-router';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { styles } from '../styles/style';
-import { getAuth } from 'firebase/auth'; // Import Firebase Auth
+import { getAuth } from 'firebase/auth';
 
 interface Doctor {
   id: string;
@@ -23,7 +23,7 @@ interface Doctor {
   experience: string;
   bio: string;
   photo?: string;
-  suspended: boolean;  // This will be a boolean
+  suspended: boolean;  
 }
 
 const specialties = [
@@ -66,15 +66,14 @@ const Home: React.FC = () => {
             experience: data.experience,
             bio: data.bio,
             photo: data.photo,
-            suspended: data.suspended ?? false, // Use a default value for suspended if missing
+            suspended: data.suspended ?? false, 
           } as Doctor;
         })
-        .filter((doctor) => !doctor.suspended); // Only show doctors that are NOT suspended
+        .filter((doctor) => !doctor.suspended);
 
-      setDoctors(docs); // Update the state with filtered doctors
+      setDoctors(docs);
     });
 
-    // Cleanup: Unsubscribe when the component unmounts
     return () => unsubscribe();
   }, []);
 
@@ -103,26 +102,24 @@ const Home: React.FC = () => {
   }, []);
 
   const handleProfileClick = () => {
-    const auth = getAuth(); // Get the Firebase authentication instance
+    const auth = getAuth();
     const user = auth.currentUser;
 
     if (user) {
-      // If the user is logged in, navigate to the profile page
       router.push('/profile');
     } else {
-      // If the user is not logged in, show an alert
       Alert.alert(
         'Not Logged In',
         'You need to log in to access your profile.',
         [
           {
             text: 'Stay as Guest',
-            onPress: () => console.log('Staying as guest'), // You can add logic for staying as guest
+            onPress: () => console.log('Staying as guest'),
             style: 'cancel',
           },
           {
             text: 'Go to Login',
-            onPress: () => router.replace('/login'), // Navigate to the login page
+            onPress: () => router.replace('/login'),
           },
         ],
         { cancelable: true }
@@ -159,27 +156,6 @@ const Home: React.FC = () => {
     return typeof url === 'string' && url.match(/\.(jpeg|jpg|gif|png)$/) !== null;
   };
 
-  const handleUseCurrentLocation = async () => {
-    if (userLocation) {
-      mapViewRef.current?.animateToRegion(userLocation, 1000);
-    } else {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status === 'granted') {
-        const location = await Location.getCurrentPositionAsync({});
-        const newLocation = {
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
-        };
-        setUserLocation(newLocation);
-        mapViewRef.current?.animateToRegion(newLocation, 1000);
-      } else {
-        Alert.alert('Permission denied', 'Location access is needed to use this feature.');
-      }
-    }
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.topRow}>
@@ -194,10 +170,6 @@ const Home: React.FC = () => {
           <View style={styles.profilePlaceholder} />
         </TouchableOpacity>
       </View>
-
-      <TouchableOpacity style={styles.locationButton} onPress={handleUseCurrentLocation}>
-        <Text style={styles.locationText}>USE CURRENT LOCATION</Text>
-      </TouchableOpacity>
 
       <View style={styles.specialtyContainer}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>

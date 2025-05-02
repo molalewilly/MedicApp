@@ -1,21 +1,55 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { auth, db } from '../config/firebase'; // make sure this is the correct path
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
 const EditDetailsScreen = () => {
-  const [fullName, setFullName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const handleEdit = () => {
-    Alert.alert('Success', 'Successfully saved!');
+  const fetchUserDetails = async () => {
+    try {
+      const uid = auth.currentUser?.uid;
+      if (!uid) return;
+      const userDoc = await getDoc(doc(db, 'users', uid));
+      if (userDoc.exists()) {
+        const data = userDoc.data();
+        setUsername(data.username || '');
+        setEmail(data.email || '');
+        setPhone(data.phone || '');
+      }
+    } catch (error) {
+      console.error('Failed to load user details:', error);
+      Alert.alert('Error', 'Could not fetch user details');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleEditPicture = () => {
-    Alert.alert('Edit Picture', 'Picture editing not implemented yet.');
+  const handleEdit = async () => {
+    try {
+      const uid = auth.currentUser?.uid;
+      if (!uid) return;
+      await updateDoc(doc(db, 'users', uid), {
+        username,
+        email,
+        phone,
+      });
+      Alert.alert('Success', 'Successfully updated details!');
+    } catch (error) {
+      console.error('Error updating user details:', error);
+      Alert.alert('Error', 'Failed to update details.');
+    }
   };
+
+  useEffect(() => {
+    fetchUserDetails();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -25,21 +59,17 @@ const EditDetailsScreen = () => {
 
       <Text style={styles.title}>Edit Details</Text>
 
-      {/* Edit Picture Placeholder */}
-      <TouchableOpacity onPress={handleEditPicture} style={styles.pictureContainer}>
-        <Image
-          source={{ uri: 'https://via.placeholder.com/100' }}
-          style={styles.profileImage}
-        />
+      <TouchableOpacity onPress={() => Alert.alert('Edit Picture', 'Not implemented')} style={styles.pictureContainer}>
+        <Image source={{ uri: 'https://via.placeholder.com/100' }} style={styles.profileImage} />
         <Text style={styles.editPicText}>Edit Picture</Text>
       </TouchableOpacity>
 
-      <Text style={styles.label}>Full Name</Text>
+      <Text style={styles.label}>Username</Text>
       <TextInput
         style={styles.input}
-        value={fullName}
-        onChangeText={setFullName}
-        placeholder="Enter full name"
+        value={username}
+        onChangeText={setUsername}
+        placeholder="Enter username"
       />
 
       <Text style={styles.label}>Email</Text>
@@ -60,7 +90,14 @@ const EditDetailsScreen = () => {
         keyboardType="phone-pad"
       />
 
-      <Button title="Edit" onPress={handleEdit} />
+<TouchableOpacity
+  style={[styles.editButton, loading && styles.disabledButton]}
+  onPress={handleEdit}
+  disabled={loading}
+>
+  <Text style={styles.editButtonText}>{loading ? 'Loading...' : 'Edit'}</Text>
+</TouchableOpacity>
+
     </View>
   );
 };
@@ -109,6 +146,22 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     marginTop: 4,
   },
+  editButton: {
+    marginTop: 20,
+    backgroundColor: '#1877F2',
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  editButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  disabledButton: {
+    backgroundColor: '#ccc',
+  },
+  
 });
 
 export default EditDetailsScreen;
