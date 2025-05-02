@@ -29,10 +29,10 @@ export default function Profile() {
           if (userDoc.exists()) {
             const userDataFromFirestore = userDoc.data();
             setUserData({
-              name: userDataFromFirestore.username || user.displayName || 'Full Name',
+              name: userDataFromFirestore.username || user.displayName || 'username',
               email: user.email || 'email@example.com',
               phone: userDataFromFirestore.phone || user.phoneNumber || '+267 7XXXXXXX',
-              profilePicture: user.photoURL || '', // Only set profilePicture if available
+              profilePicture: userDataFromFirestore.photoUrl || '', // Only set profilePicture if available
             });
           } else {
             Alert.alert('Error', 'User data not found in Firestore.');
@@ -89,7 +89,7 @@ export default function Profile() {
             <Text style={styles.initialsText}>{getInitials(userData.name)}</Text>
           </View>
         )}
-        <Text style={styles.name}>{userData.name || 'Full Name'}</Text>
+        <Text style={styles.name}>{userData.name || 'username'}</Text>
         <Text style={styles.email}>{userData.email || 'email@example.com'}</Text>
         <Text style={styles.phone}>{userData.phone || '+267 7XXXXXXX'}</Text>
 
@@ -133,8 +133,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#eee',
   },
   initialsCircle: {
-    width: 80,
-    height: 80,
+    width: 100,
+    height: 100,
     borderRadius: 40,
     backgroundColor: '#1877F2',
     justifyContent: 'center',
