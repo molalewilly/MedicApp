@@ -1,10 +1,10 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { getAuth } from 'firebase/auth'; // Import Firebase Auth
+import { getAuth } from 'firebase/auth'; 
 import { useEffect, useState } from 'react';
-import { doc, getDoc } from 'firebase/firestore'; // To fetch from Firestore
-import { db } from '../config/firebase'; // Assuming this is where your Firebase config is
+import { doc, getDoc } from 'firebase/firestore'; 
+import { db } from '../config/firebase'; 
 
 export default function Profile() {
   const router = useRouter();
@@ -21,9 +21,9 @@ export default function Profile() {
       const user = auth.currentUser;
 
       if (user) {
-        // Fetching the user's custom details from Firestore
+        
         try {
-          const userRef = doc(db, 'users', user.uid); // Assuming the user data is stored in a 'users' collection
+          const userRef = doc(db, 'users', user.uid); 
           const userDoc = await getDoc(userRef);
 
           if (userDoc.exists()) {
@@ -67,7 +67,7 @@ export default function Profile() {
       .map((n) => n[0])
       .join('')
       .toUpperCase();
-    return initials.substring(0, 2); // Ensure we get two initials
+    return initials.substring(0, 2); 
   };
 
   return (
