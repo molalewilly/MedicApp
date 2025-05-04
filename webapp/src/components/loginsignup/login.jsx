@@ -14,7 +14,8 @@ const Login = () => {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      window.location.href = "/dashboard";
+      window.location.replace("/dashboard");
+
     } catch (error) {
       switch (error.code) {
         case "auth/user-not-found":
