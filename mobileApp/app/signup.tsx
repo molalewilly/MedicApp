@@ -6,6 +6,8 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { styles } from '../styles/style';
 import { errors } from '../util/errors';  // Import error messages
+import { FontAwesome } from '@expo/vector-icons';
+
 
 export default function Signup() {
   const router = useRouter();
@@ -17,8 +19,13 @@ export default function Signup() {
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
+
+  
 
   const handleSignup = async () => {
+    
     // Check for empty fields
     if (!username || !email || !phone || !password || !confirmPassword) {
       setError(errors.missingFields);
@@ -66,7 +73,7 @@ export default function Signup() {
       // Redirect to login page after 2 seconds
       setTimeout(() => {
         router.push('/login');
-      }, 2000);
+      }, 1000);
 
     } catch (error: any) {
       if (error.code === 'auth/email-already-in-use') {
@@ -102,20 +109,37 @@ export default function Signup() {
         onChangeText={setPhone}
         keyboardType="phone-pad"
       />
-      <TextInput
-        placeholder="Enter Your Password"
-        secureTextEntry
-        style={styles.input}
-        value={password}
-        onChangeText={setPassword}
-      />
-      <TextInput
-        placeholder="Confirm Your Password"
-        secureTextEntry
-        style={styles.input}
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-      />
+    <View style={styles.inputContainer}>
+        <TextInput
+          placeholder="Enter Your Password"
+          secureTextEntry={!isPasswordVisible}
+          style={styles.input}
+          value={password}
+          onChangeText={setPassword}
+        />
+        <TouchableOpacity
+          style={styles.iconContainer}
+          onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+        >
+          <FontAwesome name={isPasswordVisible ? 'eye-slash' : 'eye'} size={20} color="#000" />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.inputContainer}>
+        <TextInput
+          placeholder="Confirm Your Password"
+          secureTextEntry={!isConfirmPasswordVisible}
+          style={styles.input}
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+        />
+        <TouchableOpacity
+          style={styles.iconContainer}
+          onPress={() => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)}
+        >
+          <FontAwesome name={isConfirmPasswordVisible ? 'eye-slash' : 'eye'} size={20} color="#000" />
+        </TouchableOpacity>
+      </View>
+
 
       <TouchableOpacity style={styles.signupButton} onPress={handleSignup}>
         <Text style={styles.signupText}>Sign Up</Text>
@@ -125,13 +149,13 @@ export default function Signup() {
 
       {/* Removed Facebook and Google Buttons */}
 
-      <TouchableOpacity onPress={() => router.push('/home')}>
+      <TouchableOpacity onPress={() => router.replace('/home')}>
         <Text style={styles.guestText}>Continue as Guest</Text>
       </TouchableOpacity>
 
       <Text style={styles.loginText}>
         Already have an account?{' '}
-        <Text style={styles.loginLink} onPress={() => router.push('/login')}>Login</Text>
+        <Text style={styles.loginLink} onPress={() => router.replace('/login')}>Login</Text>
       </Text>
 
       {/* Modal for error/success messages */}

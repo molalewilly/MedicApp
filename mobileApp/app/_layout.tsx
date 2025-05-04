@@ -12,9 +12,6 @@ export default function RootLayout() {
     <Stack.Screen name="DoctorDetails" />
     <Stack.Screen name="BookAppointment" />
     
-    
-  
-
     </Stack>
   );
 }

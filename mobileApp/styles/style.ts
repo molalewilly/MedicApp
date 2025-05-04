@@ -231,6 +231,16 @@ initialsTextSmall: {
   fontSize: 16,
   fontWeight: 'bold',
 },
+inputContainer: {
+  position: 'relative',
+},
+iconContainer: {
+  position: 'absolute',
+  right: 10,
+  top: '50%',
+  transform: [{ translateY: -10 }],
+},
+
 
   
    

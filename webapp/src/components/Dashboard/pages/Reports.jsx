@@ -1,74 +1,49 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from "../../../firebase";
+import DoctorReportModal from './DoctorReportModal';
+import './report.css'; 
 
-const Reports = () => {
-  const [reports, setReports] = useState([
-    { id: 1, title: "Doctor Registration Report", date: "2025-04-21", status: "Generated" },
-    { id: 2, title: "Specialty Management Report", date: "2025-04-20", status: "Generated" },
-    { id: 3, title: "Business Registration Report", date: "2025-04-19", status: "Pending" },
-  ]);
+const ReportsPage = () => {
+  const [doctors, setDoctors] = useState([]);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
 
-  const handleGenerateReport = () => {
-    // Logic to generate a new report
-    const newReport = {
-      id: Date.now(),
-      title: prompt("Enter report title:"),
-      date: new Date().toISOString().split("T")[0],
-      status: "Generated",
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      const snapshot = await getDocs(collection(db, 'doctors'));
+      setDoctors(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     };
-    setReports([...reports, newReport]);
-  };
+    fetchDoctors();
+  }, []);
 
-  const handleViewReport = (id) => {
-    // Logic to view the report
-    alert(`Viewing report with ID: ${id}`);
-  };
-
-  const handleDownloadReport = (id) => {
-    // Logic to download the report
-    alert(`Downloading report with ID: ${id}`);
+  const handleGenerateReport = (doctor) => {
+    setSelectedDoctor(doctor); 
   };
 
   return (
-    <div className="reports-page">
-      <h2 className="reports-heading">Reports Management</h2>
-      <button className="generate-report-btn" onClick={handleGenerateReport}>
-        Generate Report
-      </button>
-      <table className="report-table">
-        <thead>
-          <tr>
-            <th>Report Title</th>
-            <th>Report Date</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {reports.map((report) => (
-            <tr key={report.id}>
-              <td>{report.title}</td>
-              <td>{report.date}</td>
-              <td>{report.status}</td>
-              <td>
-                <button
-                  className="view-btn"
-                  onClick={() => handleViewReport(report.id)}
-                >
-                  View
-                </button>
-                <button
-                  className="download-btn"
-                  onClick={() => handleDownloadReport(report.id)}
-                >
-                  Download
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="p-6">
+      <h2 className="text-2xl font-bold mb-4">Reports</h2>
+      {doctors.map((doctor) => (
+  <div key={doctor.id} className="doctor-report-container">
+    <span>{doctor.name}</span>
+    <button
+      onClick={() => handleGenerateReport(doctor)}  
+      className="generate-report-button"
+    >
+      Generate Report
+    </button>
+  </div>
+))}
+
+
+      {selectedDoctor && (
+        <DoctorReportModal
+          doctor={selectedDoctor}
+          onClose={() => setSelectedDoctor(null)} 
+        />
+      )}
     </div>
   );
 };
 
-export default Reports;
+export default ReportsPage;

@@ -51,18 +51,20 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <div className="forgot-password"><a href="#">Forgot password?</a></div>
+        
           <button type="submit" className="signin-btn">SIGN IN</button>
         </form>
       </div>
 
       <div className="login-right">
         <div className="signup-box">
-          <h3>New here?</h3>
-          <p>Sign up your Business and discover new opportunities!</p>
-          <button className="signup-btn" onClick={() => window.location.href='/signup'}>
-            SIGN UP
-          </button>
+          <h3>About</h3>
+          <p>
+        The Molale Admin Portal is a powerful web-based dashboard designed for management of doctors.
+        Built for efficiency and control, it enables administrators to easily register and monitor doctors, handle reports, and 
+        manage business or doctors data—all from one intuitive interface.
+      </p>
+
         </div>
       </div>
     </div>

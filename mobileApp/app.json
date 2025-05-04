@@ -12,6 +12,10 @@
       "supportsTablet": true,
       "runtimeVersion": {
         "policy": "appVersion"
+      },
+      "bundleIdentifier": "com.laronawillymolale.mobileApp",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -20,7 +24,12 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.laronawillymolale.mobileApp",
-      "runtimeVersion": "1.0.0"
+      "runtimeVersion": "1.0.0",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAlOY8UbHU-xeOraxMP_R1CcKKBivdPeQM"
+        }
+      }
     },
     "web": {
       "bundler": "metro",
@@ -47,11 +56,12 @@
         "origin": false
       },
       "eas": {
-        "projectId": "3cfef8d0-a257-4d0d-85f2-4e290edb70d9"
+        "projectId": "60f5a5a2-ba99-4f62-ad6e-5e08d84910a5"
       }
     },
     "updates": {
       "url": "https://u.expo.dev/3cfef8d0-a257-4d0d-85f2-4e290edb70d9"
-    }
+    },
+    "owner": "laronawillymolale"
   }
 }

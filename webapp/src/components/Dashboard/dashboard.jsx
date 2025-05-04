@@ -1,16 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import RegisterDoctor from "./pages/RegisterDoctor";
 import ManageDoctors from "./pages/ManageDoctors";
-import Specialties from "./pages/Specialties";
-import Businesses from "./pages/Businesses";
 import Reports from "./pages/Reports";
-import { Home, Plus, Edit, BarChart2, FileText, CheckCircle } from "lucide-react";
+import { Home, Plus, Edit, BarChart2 } from "lucide-react";
 import { db } from "../../firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase";  
 import "./dashboard.css";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
+  const logout = () => {
+    signOut(auth)
+      .then(() => {
+        localStorage.removeItem("authToken");  
+        navigate("/login", { replace: true }); 
+      })
+      .catch((error) => {
+        console.error("Error logging out:", error);
+      });
+  };
+  
   return (
     <div className="dashboard-container">
       {/* Sidebar */}
@@ -26,16 +39,14 @@ const Dashboard = () => {
           <Link to="/dashboard/manage" className="sidebar-link">
             <Edit size={18} /> Manage Doctors
           </Link>
-          <Link to="/dashboard/specialties" className="sidebar-link">
-            <CheckCircle size={18} /> Specialties
-          </Link>
-          <Link to="/dashboard/businesses" className="sidebar-link">
-            <FileText size={18} /> Businesses
-          </Link>
           <Link to="/dashboard/reports" className="sidebar-link">
             <BarChart2 size={18} /> Reports
           </Link>
         </nav>
+
+        <button onClick={logout} className="logout-button mt-6 text-red-600 font-semibold">
+          Log Out
+        </button>
       </div>
 
       {/* Main Content */}
@@ -44,8 +55,6 @@ const Dashboard = () => {
           <Route path="/" element={<DashboardHome />} />
           <Route path="/register" element={<RegisterDoctor />} />
           <Route path="/manage" element={<ManageDoctors />} />
-          <Route path="/specialties" element={<Specialties />} />
-          <Route path="/businesses" element={<Businesses />} />
           <Route path="/reports" element={<Reports />} />
         </Routes>
       </div>
@@ -56,23 +65,23 @@ const Dashboard = () => {
 const DashboardHome = () => {
   const [totalDoctors, setTotalDoctors] = useState(0);
   const [uniqueSpecialties, setUniqueSpecialties] = useState(0);
+  const [suspendedDoctors, setSuspendedDoctors] = useState(0);
 
   useEffect(() => {
-    // Fetch the doctors and calculate total and unique specialties
-    const fetchDoctors = async () => {
-      const doctorsCollection = collection(db, "doctors");
-      const doctorSnapshot = await getDocs(doctorsCollection);
-      const doctors = doctorSnapshot.docs.map(doc => doc.data());
+    const unsubscribe = onSnapshot(collection(db, "doctors"), (snapshot) => {
+      const doctors = snapshot.docs.map(doc => doc.data());
 
-      setTotalDoctors(doctorSnapshot.size); // Total doctor count
+      setTotalDoctors(doctors.length);
 
-      // Get unique specialties
       const specialties = doctors.map(doctor => doctor.specialty);
-      const uniqueSpecialtiesSet = new Set(specialties);
-      setUniqueSpecialties(uniqueSpecialtiesSet.size); // Set size is the count of unique specialties
-    };
+      const uniqueSet = new Set(specialties);
+      setUniqueSpecialties(uniqueSet.size);
 
-    fetchDoctors();
+      const suspendedCount = doctors.filter(doctor => doctor.suspended === true).length;
+      setSuspendedDoctors(suspendedCount);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   return (
@@ -81,8 +90,8 @@ const DashboardHome = () => {
       <div className="dashboard-stats-grid">
         <StatCard title="Total Doctors" count={totalDoctors} />
         <StatCard title="Specialties" count={uniqueSpecialties} />
-        <StatCard title="Businesses Pending" count={5} />
-        <StatCard title="Reports Generated" count={12} />
+        <StatCard title="Suspended Doctors" count={suspendedDoctors} />
+       
       </div>
     </div>
   );

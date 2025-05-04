@@ -43,7 +43,7 @@ const ManageDoctor = () => {
         email: updatedDoctor.email,
         specialty: updatedDoctor.specialty,
         phone: updatedDoctor.phone,
-        gender: updatedDoctor.gender,
+       
         experience: updatedDoctor.experience,
         bio: updatedDoctor.bio,
         location: {
@@ -72,7 +72,7 @@ const ManageDoctor = () => {
               <th>Email</th>
               <th>Specialty</th>
               <th>Phone</th>
-              <th>Gender</th>
+              
               <th>Location</th>
               <th>Experience</th>
               <th>Status</th>
@@ -86,7 +86,7 @@ const ManageDoctor = () => {
                 <td>{doctor.email}</td>
                 <td>{doctor.specialty}</td>
                 <td>{doctor.phone}</td>
-                <td>{doctor.gender}</td>
+              
                 <td>
                   {doctor.location ? (
                     <span>

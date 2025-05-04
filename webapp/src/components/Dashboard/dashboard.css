@@ -71,4 +71,29 @@
   .stat-card:hover {
     transform: scale(1.03);
   }
+  .logout-button {
+    padding: 10px 20px;
+    background-color: #f07681; /* Light red background */
+    border: 1px solid #f5c6cb; /* Light red border */
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: 16px;
+    text-align: center;
+    width: 100%;
+  }
+  
+  .logout-button:hover {
+    background-color: #f1b0b7; /* Darker red on hover */
+    color: #721c24; /* Dark red text on hover */
+  }
+  
+  .logout-button:focus {
+    outline: none;
+  }
+  
+  .logout-button:active {
+    background-color: #f70820; /* Darker red on click */
+  }
+  
   

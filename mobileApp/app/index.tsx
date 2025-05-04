@@ -15,10 +15,9 @@ export default function Index() {
 
       
       <View style={styles.footer}>
-        <Text>Already have an account? </Text>
-        <TouchableOpacity onPress={() => router.push('/login')}>
-          <Text style={styles.link}>Log In</Text>
-        </TouchableOpacity>
+        <Text>Created by Larona Molale </Text>
+        <Text>22000561 </Text>
+        
       </View>
     </View>
   );
@@ -46,6 +45,6 @@ const styles = StyleSheet.create({
 
   button: { backgroundColor: '#4285F4', paddingVertical: 12, paddingHorizontal: 40, borderRadius: 8, marginTop: 20 },
   buttonText: { color: '#fff', fontSize: 16 },
-  footer: { marginTop: 20, flexDirection: 'row' }, 
+  footer: { marginTop: 100, flexDirection: 'row' }, 
   link: { color: '#4285F4' },
 });

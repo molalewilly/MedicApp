@@ -5,6 +5,7 @@ import { auth } from '../config/firebase';
 import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { styles } from '../styles/style';
 import { errors } from '../util/errors';
+import { FontAwesome } from '@expo/vector-icons';
 
 export default function Login() {
   const router = useRouter();
@@ -12,6 +13,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -71,15 +73,21 @@ export default function Login() {
         accessibilityLabel="Email Input"
         accessibilityHint="Enter your email address"
       />
-      <TextInput
-        placeholder="Enter Your Password"
-        secureTextEntry
-        style={styles.input}
-        value={password}
-        onChangeText={setPassword}
-        accessibilityLabel="Password Input"
-        accessibilityHint="Enter your password"
-      />
+       <View style={styles.inputContainer}>
+        <TextInput
+          placeholder="Enter Your Password"
+          secureTextEntry={!isPasswordVisible}
+          style={styles.input}
+          value={password}
+          onChangeText={setPassword}
+        />
+        <TouchableOpacity
+          style={styles.iconContainer}
+          onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+        >
+          <FontAwesome name={isPasswordVisible ? 'eye-slash' : 'eye'} size={20} color="#000" />
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.inlineRow}>
         <View />

@@ -24,7 +24,6 @@ const RegisterDoctor = () => {
     email: "",
     specialty: "",
     phone: "",
-    gender: "",
     location: {
       address: "",
       latitude: "",
@@ -83,7 +82,7 @@ const RegisterDoctor = () => {
     if (selectedFile) {
       const formData = new FormData();
       formData.append("file", selectedFile);
-      formData.append("upload_preset", "doctors"); // your upload preset
+      formData.append("upload_preset", "doctors");
 
       try {
         const response = await fetch(
@@ -106,7 +105,7 @@ const RegisterDoctor = () => {
     try {
       await addDoc(collection(db, "doctors"), {
         ...doctor,
-        photo: photoUrl, // Include image URL
+        photo: photoUrl,
         location: {
           address: doctor.location.address,
           latitude: parseFloat(doctor.location.latitude),
@@ -121,7 +120,6 @@ const RegisterDoctor = () => {
         email: "",
         specialty: "",
         phone: "",
-        gender: "",
         location: {
           address: "",
           latitude: "",
@@ -159,14 +157,21 @@ const RegisterDoctor = () => {
             placeholder="Email"
             required
           />
-          <input
-            type="text"
-            name="specialty"
-            value={doctor.specialty}
-            onChange={handleInputChange}
-            placeholder="Specialty"
-            required
-          />
+          {/* Specialty Dropdown */}
+<select
+  name="specialty"
+  value={doctor.specialty}
+  onChange={handleInputChange}
+  required
+>
+  <option value="" disabled>Select Specialty</option>
+  <option value="Dentist">Dentist</option>
+  <option value="Cardiologist">Cardiologist</option>
+  <option value="Dermatologist">Dermatologist</option>
+  <option value="Gynecologist">Gynecologist</option>
+  <option value="Psychiatrist">Psychiatrist</option>
+  <option value="Neurosurgeon">Neurosurgeon</option>
+</select>
           <input
             type="text"
             name="phone"
@@ -175,18 +180,15 @@ const RegisterDoctor = () => {
             placeholder="Phone"
             required
           />
-          <input
-            type="text"
-            name="gender"
-            value={doctor.gender}
-            onChange={handleInputChange}
-            placeholder="Gender"
-            required
-          />
+
 
           {/* Map Section */}
           <div style={{ height: "400px", marginBottom: "20px" }}>
-            <MapContainer center={[-24.6544, 25.9086]} zoom={13} style={{ height: "100%", width: "100%" }}>
+            <MapContainer
+              center={[-24.6544, 25.9086]}
+              zoom={13}
+              style={{ height: "100%", width: "100%" }}
+            >
               <TileLayer
                 attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -217,14 +219,16 @@ const RegisterDoctor = () => {
             disabled
           />
 
-          <input
-            type="number"
-            name="experience"
-            value={doctor.experience}
-            onChange={handleInputChange}
-            placeholder="Experience (years)"
-            required
-          />
+<input
+  type="number"
+  name="experience"
+  value={doctor.experience}
+  onChange={handleInputChange}
+  placeholder="Experience (years)"
+  min="0"
+  required
+/>
+
           <textarea
             name="bio"
             value={doctor.bio}
@@ -233,7 +237,6 @@ const RegisterDoctor = () => {
             required
           />
 
-          {/* Photo Upload */}
           <input
             type="file"
             accept="image/*"
