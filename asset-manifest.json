@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/MedicApp/static/css/main.0d29ec0c.css",
-    "main.js": "/MedicApp/static/js/main.ddfc5c3e.js",
+    "main.js": "/MedicApp/static/js/main.ab19b293.js",
     "static/js/239.9a52d627.chunk.js": "/MedicApp/static/js/239.9a52d627.chunk.js",
     "static/js/977.28ea06ab.chunk.js": "/MedicApp/static/js/977.28ea06ab.chunk.js",
     "static/js/732.34f0920f.chunk.js": "/MedicApp/static/js/732.34f0920f.chunk.js",
     "static/js/453.8566eefc.chunk.js": "/MedicApp/static/js/453.8566eefc.chunk.js",
     "index.html": "/MedicApp/index.html",
     "main.0d29ec0c.css.map": "/MedicApp/static/css/main.0d29ec0c.css.map",
-    "main.ddfc5c3e.js.map": "/MedicApp/static/js/main.ddfc5c3e.js.map",
+    "main.ab19b293.js.map": "/MedicApp/static/js/main.ab19b293.js.map",
     "239.9a52d627.chunk.js.map": "/MedicApp/static/js/239.9a52d627.chunk.js.map",
     "977.28ea06ab.chunk.js.map": "/MedicApp/static/js/977.28ea06ab.chunk.js.map",
     "732.34f0920f.chunk.js.map": "/MedicApp/static/js/732.34f0920f.chunk.js.map",
@@ -16,6 +16,6 @@
   },
   "entrypoints": [
     "static/css/main.0d29ec0c.css",
-    "static/js/main.ddfc5c3e.js"
+    "static/js/main.ab19b293.js"
   ]
 }
